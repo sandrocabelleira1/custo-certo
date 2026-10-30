@@ -1,98 +1,153 @@
-
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Funções auxiliares seguras
-    function getUserData() {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userData() {
       return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
     }
 
-    function isRole(role) {
-      return request.auth != null && getUserData().get('role', '') == role;
+    function roleIs(role) {
+      return signedIn() && userData().get('role', '') == role;
     }
-    
-    function belongsToStore(storeId) {
-      let data = getUserData();
-      return data.get('role', '') == 'Master' || data.get('storeId', '') == storeId;
+
+    function canAccessStore(storeId) {
+      return roleIs('Master') ||
+        (signedIn() && userData().get('storeId', '') == storeId);
+    }
+
+    function canManageStore(storeId) {
+      return roleIs('Master') ||
+        (roleIs('Gerente') && userData().get('storeId', '') == storeId);
+    }
+
+    function validStoreAssignment(data) {
+      let storeId = data.get('storeId', '');
+      return storeId is string && storeId.size() > 0;
+    }
+
+    function managerCanCreate(data) {
+      return validStoreAssignment(data) &&
+        canManageStore(data.get('storeId', ''));
+    }
+
+    function managerCanUpdate() {
+      return canManageStore(resource.data.get('storeId', '')) &&
+        request.resource.data.get('storeId', '') ==
+          resource.data.get('storeId', '');
+    }
+
+    function canOperateStore(storeId) {
+      return canAccessStore(storeId) &&
+        userData().get('role', '') in ['Master', 'Gerente', 'Colaborador'];
     }
 
     match /users/{userId} {
-      allow read: if request.auth != null;
-      allow create, update: if isRole('Master');
-      allow delete: if isRole('Master') || (request.auth.uid == userId && getUserData().get('role', '') != 'Master');
+      allow read: if signedIn() &&
+        (request.auth.uid == userId || roleIs('Master'));
+      allow create, update: if roleIs('Master') &&
+        request.resource.data.get('role', '') in
+          ['Master', 'Gerente', 'Colaborador'];
+      allow delete: if roleIs('Master') ||
+        (signedIn() && request.auth.uid == userId &&
+          userData().get('role', '') != 'Master');
     }
-    
+
     match /stores/{storeId} {
-      allow read: if request.auth != null;
-      allow create, update, delete: if isRole('Master');
+      allow read: if canAccessStore(storeId);
+      allow create, update, delete: if roleIs('Master');
     }
 
     match /ingredients/{ingredientId} {
-        allow read: if belongsToStore(resource.data.storeId);
-        allow create: if isRole('Master') || isRole('Gerente');
-        allow update: if isRole('Master') || (isRole('Gerente') && belongsToStore(resource.data.storeId));
-        allow delete: if isRole('Master');
+      allow read: if canAccessStore(resource.data.storeId);
+      allow create: if managerCanCreate(request.resource.data);
+      allow update: if managerCanUpdate();
+      allow delete: if canManageStore(resource.data.storeId);
     }
 
     match /suppliers/{supplierId} {
-        allow read: if belongsToStore(resource.data.storeId);
-        allow create, update, delete: if isRole('Master') || isRole('Gerente');
+      allow read: if canAccessStore(resource.data.storeId);
+      allow create: if managerCanCreate(request.resource.data);
+      allow update: if managerCanUpdate();
+      allow delete: if canManageStore(resource.data.storeId);
     }
 
     match /purchases/{purchaseId} {
-       allow read: if belongsToStore(resource.data.storeId);
-       allow create, update, delete: if isRole('Master') || isRole('Gerente');
+      allow read: if canAccessStore(resource.data.storeId);
+      allow create: if managerCanCreate(request.resource.data);
+      allow update: if managerCanUpdate();
+      allow delete: if canManageStore(resource.data.storeId);
     }
 
     match /expenses/{expenseId} {
-       allow read: if belongsToStore(resource.data.storeId);
-       allow create, update, delete: if isRole('Master') || isRole('Gerente');
+      allow read: if canAccessStore(resource.data.storeId);
+      allow create: if managerCanCreate(request.resource.data);
+      allow update: if managerCanUpdate();
+      allow delete: if canManageStore(resource.data.storeId);
     }
-    
+
     match /stockAdjustments/{adjustmentId} {
-      allow read: if belongsToStore(resource.data.storeId);
-      allow create: if request.auth != null;
+      allow read: if canAccessStore(resource.data.storeId);
+      allow create: if validStoreAssignment(request.resource.data) &&
+        canOperateStore(request.resource.data.get('storeId', ''));
     }
-    
+
     match /recipes/{recipeId} {
-       allow read: if belongsToStore(resource.data.storeId);
-       allow create, update, delete: if isRole('Master') || isRole('Gerente');
+      allow read: if canAccessStore(resource.data.storeId);
+      allow create: if managerCanCreate(request.resource.data);
+      allow update: if managerCanUpdate();
+      allow delete: if canManageStore(resource.data.storeId);
     }
-    
+
     match /revenues/{revenueId} {
-        allow read: if belongsToStore(resource.data.storeId);
-        allow create, delete: if isRole('Master') || isRole('Gerente');
+      allow read: if canAccessStore(resource.data.storeId);
+      allow create: if managerCanCreate(request.resource.data);
+      allow delete: if canManageStore(resource.data.storeId);
     }
-    
+
     match /payableAccounts/{accountId} {
-       allow read: if belongsToStore(resource.data.storeId);
-       allow create, update, delete: if isRole('Master') || isRole('Gerente');
+      allow read: if canAccessStore(resource.data.storeId);
+      allow create: if managerCanCreate(request.resource.data);
+      allow update: if managerCanUpdate();
+      allow delete: if canManageStore(resource.data.storeId);
     }
-    
+
     match /monthlyClosings/{closingId} {
-        allow read: if belongsToStore(resource.data.storeId);
-        allow create, update, delete: if isRole('Master') || isRole('Gerente');
+      allow read: if canAccessStore(resource.data.storeId);
+      allow create: if managerCanCreate(request.resource.data);
+      allow update: if managerCanUpdate();
+      allow delete: if canManageStore(resource.data.storeId);
     }
-    
+
     match /settings/{settingsId} {
-       allow read: if belongsToStore(resource.data.storeId);
-       allow write: if isRole('Master') || isRole('Gerente');
+      allow read: if canAccessStore(resource.data.storeId);
+      allow create: if managerCanCreate(request.resource.data);
+      allow update: if managerCanUpdate();
+      allow delete: if canManageStore(resource.data.storeId);
     }
 
     match /checklists/{checklistId} {
-      allow read: if belongsToStore(resource.data.storeId);
-      allow write: if isRole('Master') || isRole('Gerente');
+      allow read: if canAccessStore(resource.data.storeId);
+      allow create: if managerCanCreate(request.resource.data);
+      allow update: if managerCanUpdate();
+      allow delete: if canManageStore(resource.data.storeId);
     }
 
     match /checklistExecutions/{executionId} {
-      allow read: if belongsToStore(resource.data.storeId);
-      allow create: if request.auth != null;
+      allow read: if canAccessStore(resource.data.storeId);
+      allow create: if validStoreAssignment(request.resource.data) &&
+        canOperateStore(request.resource.data.get('storeId', '')) &&
+        request.resource.data.get('completedByUserId', '') ==
+          request.auth.uid;
     }
 
     match /manuals/{manualId} {
-      allow read: if belongsToStore(resource.data.storeId);
-      allow write: if isRole('Master') || isRole('Gerente');
+      allow read: if canAccessStore(resource.data.storeId);
+      allow create: if managerCanCreate(request.resource.data);
+      allow update: if managerCanUpdate();
+      allow delete: if canManageStore(resource.data.storeId);
     }
   }
 }
