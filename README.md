@@ -1,51 +1,42 @@
-# Custo Certo - Sistema Inteligente de Gestão Gastronômica
+# Custo Certo
 
-O **Custo Certo** é uma plataforma ERP (Enterprise Resource Planning) e de BI (Business Intelligence) especializada para restaurantes, com foco em operações multi-unidades (redes de franquias ou lojas próprias). O sistema une gestão financeira, controle de estoque em tempo real e automação via Inteligência Artificial para garantir a saúde financeira e a padronização operacional.
+**Restaurant operations and cost visibility | Next.js · TypeScript · Firebase**
 
-## 1. Objetivo Central
-O objetivo primordial do sistema é o **Controle do CMV (Custo de Mercadoria Vendida)**. Através do monitoramento preciso de entradas (compras) e saídas (vendas e produção), o Custo Certo permite que o proprietário identifique desvios, desperdícios e flutuações de preços que afetam a lucratividade do negócio.
+Custo Certo is a web application prototype for restaurant operations, focused on organizing purchasing, expenses, inventory, recipe costs, and CMV (food cost) across one or more locations.
 
-## 2. Personas e Permissões
-O sistema opera com três níveis de acesso distintos para garantir a segurança dos dados:
-*   **Master (Proprietário/Administrador)**: Acesso total a todas as lojas, relatórios consolidados, gestão de usuários, configuração de metas globais e exclusão de registros sensíveis.
-*   **Gerente**: Responsável por uma unidade específica. Gerencia faturamento, compras, contas a pagar, fichas técnicas e equipe da sua loja.
-*   **Colaborador**: Foco operacional. Registra saídas de estoque, realiza balanço físico, executa checklists de abertura/fechamento e imprime etiquetas de validade.
+**Project status:** active development. The modules and AI flows below are present in the source tree; this repository snapshot does not claim that every workflow is complete or production-validated.
 
-## 3. Principais Módulos e Funções
+## What is represented in the code
 
-### A. Gestão Financeira e Estratégica
-*   **Faturamento Diário**: Registro das receitas da loja com gráficos de flutuação mensal.
-*   **Lançamento de Compras**: Entrada de notas fiscais com upload de anexo (foto/PDF). O sistema atualiza automaticamente o custo unitário e o custo médio dos insumos.
-*   **Contas a Pagar**: Gestão de boletos com leitor de código de barras via câmera (IA). Permite acompanhar vencimentos, agendamentos (PIX) e histórico de pagamentos.
-*   **Análise de CMV Mensal**: Ferramenta de fechamento que cruza estoque inicial, compras, estoque final e faturamento para entregar o percentual de CMV real do mês.
-*   **Projeção de Vendas (IA)**: Assistente que utiliza dados históricos e **previsão do tempo (OpenWeather)** para distribuir metas diárias de faturamento, ajudando o gerente a planejar compras e escalas.
+- **Finance:** purchases, suppliers, expenses, accounts payable, revenue, dashboards, and monthly closing reports.
+- **Inventory and production:** ingredient catalog, stock adjustments, inventory counts, recipes, production, and purchase suggestions.
+- **Operations:** store and user management, checklists, procedure manuals (POPs), and shelf-life labels.
+- **AI flows (Genkit):** financial and recipe analysis, checklist and manual generation, sales projections with weather data, and barcode reading.
 
-### B. Gestão de Estoque e Produção
-*   **Catálogo de Insumos**: Gestão por categoria (Alimentos, Bebidas, etc.) com unidades de medida e histórico de preços.
-*   **Produção e Desmembramento**: 
-    *   *Desmembramento*: Transforma um insumo bruto em vários processados (ex: 1 Peça de Alcatra -> Bife, Carne de Panela e Gordura).
-    *   *Via Receita*: Produz itens compostos (ex: Maionese da Casa) baixando automaticamente os ingredientes do estoque com base na Ficha Técnica.
-*   **Assistente de Compras**: Analisa o consumo das últimas 4 semanas e o estoque atual para sugerir o que precisa ser comprado.
-*   **Balanço de Estoque**: Ferramenta para contagem física que gera ajustes automáticos no sistema e relatórios de perdas/ganhos em PDF.
+## Technology
 
-### C. Padronização Operacional (Qualidade)
-*   **Fichas Técnicas (Technical Sheets)**: Detalhamento completo de pratos com custo de produção, preço de venda sugerido, cálculo automático de CMV e análise de alergênicos via IA.
-*   **Checklists e POPs**: Criação e execução de checklists digitais (Abertura, Fechamento, Limpeza). Permite gerar Manuais de Procedimento (SOPs) via IA para auditorias sanitárias.
-*   **Gerador de Etiquetas**: Emissão de etiquetas de validade (Resfriado/Congelado) seguindo as normas da vigilância sanitária, com informações de lote, responsável e ingredientes.
+- Next.js 15, React 18, TypeScript, Tailwind CSS
+- Firebase Authentication, Cloud Firestore, Firebase Storage, and Firebase App Hosting configuration
+- Genkit with Google AI
+- Radix UI / shadcn-style components, Lucide, Recharts, and jsPDF
 
-## 4. Integração com Inteligência Artificial (Genkit)
-O Custo Certo utiliza modelos avançados de IA (Gemini 2.0 Flash) para automatizar tarefas complexas:
-1.  **Leitura de Boletos (OCR)**: Extração de números de códigos de barras a partir de fotos.
-2.  **Nutricionista Virtual**: Analisa ingredientes das receitas para gerar tabelas nutricionais e identificar alergênicos comuns.
-3.  **Consultoria de Processos**: Gera checklists detalhados e manuais técnicos (Markdown) sobre qualquer tópico operacional de cozinha.
-4.  **Estrategista de Vendas**: Calcula metas diárias considerando feriados e clima (ex: aumenta meta de bebidas se a previsão for de sol intenso).
+## Run locally
 
-## 5. Stack Tecnológica
-*   **Frontend**: Next.js 15 (App Router), React, Tailwind CSS.
-*   **Componentes**: Shadcn/UI (Radix UI) e Lucide Icons.
-*   **Backend & Database**: Firebase (Firestore, Authentication, Storage).
-*   **IA**: Google Genkit com modelos Gemini.
-*   **Relatórios**: Recharts (Gráficos) e jsPDF (Documentos).
+Requirements: Node.js, npm, and a Firebase project configured for the services used by the app. AI flows also require Google AI credentials.
 
----
-*Este sistema é uma propriedade intelectual dedicada à excelência na gestão gastronômica.*
+```bash
+npm ci
+npm run dev
+```
+
+The development server uses port 9002. Configure Firebase and AI access for your own environment before using those features. Environment files are excluded from Git; never commit credentials.
+
+## Security and deployment notes
+
+- The repository contains Firestore rules that scope access by user role and store. The rules were updated in this snapshot, but have **not** been deployed to Firebase or validated with the Rules Simulator as part of this GitHub sync.
+- Storage rules are managed separately and are not included in this repository snapshot.
+- The live Firebase preview currently opens at the login screen; authenticated workflows and production readiness have not been independently verified.
+
+## Resumo em português
+
+Protótipo de gestão para restaurantes com módulos de compras, despesas, estoque, receitas, produção, CMV, relatórios, checklists e fluxos de IA. O projeto está em desenvolvimento; as funções e regras descritas refletem o código versionado e não equivalem a uma validação completa em produção.
