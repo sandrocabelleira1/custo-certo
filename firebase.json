@@ -1,0 +1,8 @@
+
+{
+  "projectId": "custocerto-vi1a8",
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}
