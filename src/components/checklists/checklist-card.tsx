@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { autoTable } from 'jspdf-autotable';
 import { format } from 'date-fns';
 
 import {
@@ -84,7 +84,7 @@ export function ChecklistCard({ checklist, onEdit, onDelete }: ChecklistCardProp
     }
 
     // Table
-    (doc as any).autoTable({
+    autoTable(doc, {
         head: [tableColumn],
         body: tableRows,
         startY: startY,
@@ -175,7 +175,7 @@ export function ChecklistCard({ checklist, onEdit, onDelete }: ChecklistCardProp
                     <AlertDialogHeader>
                     <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Essa ação não pode ser desfeita. Isso excluirá permanentemente o modelo de checklist "{checklist.name}".
+                        Essa ação não pode ser desfeita. Isso excluirá permanentemente o modelo de checklist &quot;{checklist.name}&quot;.
                     </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

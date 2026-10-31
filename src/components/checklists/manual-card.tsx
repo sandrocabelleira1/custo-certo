@@ -107,7 +107,7 @@ export function ManualCard({ manual, onEdit, onDelete }: ManualCardProps) {
             <AlertDialogHeader>
               <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
               <AlertDialogDescription>
-                Essa ação não pode ser desfeita. Isso excluirá permanentemente o manual "{manual.topic}".
+                Essa ação não pode ser desfeita. Isso excluirá permanentemente o manual &quot;{manual.topic}&quot;.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { collection, onSnapshot, query, orderBy, Timestamp, doc, runTransaction, where, getDocs, increment } from 'firebase/firestore';
 import { History } from 'lucide-react';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { autoTable } from 'jspdf-autotable';
 
 import PageHeader from "@/components/page-header";
 import { StockAdjustmentForm, type StockAdjustmentFormValues } from "@/components/ajuste-estoque/stock-adjustment-form";
@@ -101,7 +101,7 @@ export default function AjusteEstoquePage() {
         doc.text(`Loja de Origem: ${originStore.name}`, 14, 36);
         doc.text(`Loja de Destino: ${destinationStore.name}`, 14, 42);
 
-        (doc as any).autoTable({
+        autoTable(doc, {
             startY: 50,
             head: [['Insumo', 'Quantidade', 'Unidade']],
             body: [[ingredient.name, adjustment.quantity, ingredient.unit]],

@@ -31,7 +31,7 @@ import { useAuth } from '@/components/auth/auth-provider';
 import { formatCurrency } from '@/lib/utils';
 import { format } from 'date-fns';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { autoTable } from 'jspdf-autotable';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 type CountedStock = {
@@ -216,7 +216,7 @@ export default function BalancoEstoquePage() {
       tableRows.push(ingredientData);
     });
 
-    (doc as any).autoTable({
+    autoTable(doc, {
         head: [tableColumn],
         body: tableRows,
         startY: 35,
@@ -257,7 +257,7 @@ export default function BalancoEstoquePage() {
         <CardHeader>
           <CardTitle>Contagem de Insumos - {currentStore?.name}</CardTitle>
           <CardDescription>
-            Preencha a coluna 'Estoque Contado' com a quantidade física de cada item. Itens não preenchidos manterão o estoque do sistema no cálculo do valor total.
+            Preencha a coluna &apos;Estoque Contado&apos; com a quantidade física de cada item. Itens não preenchidos manterão o estoque do sistema no cálculo do valor total.
           </CardDescription>
         </CardHeader>
         <CardContent>

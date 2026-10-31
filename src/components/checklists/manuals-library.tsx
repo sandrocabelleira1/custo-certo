@@ -40,7 +40,7 @@ export function ManualsLibrary({ manuals, onNew, onEdit, onDelete }: ManualsLibr
                     <CardContent className="py-12">
                         <div className="text-center text-muted-foreground">
                             <p>Nenhum manual encontrado na biblioteca.</p>
-                            <p className="text-sm">Clique em "Novo Manual com IA" para criar o seu primeiro.</p>
+                            <p className="text-sm">Clique em &quot;Novo Manual com IA&quot; para criar o seu primeiro.</p>
                         </div>
                     </CardContent>
                 </Card>

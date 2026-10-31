@@ -421,7 +421,7 @@ export default function ChecklistsPage() {
                         <CardContent className="py-12">
                             <div className="text-center text-muted-foreground">
                                 <p>Nenhum modelo de checklist encontrado.</p>
-                                <p className="text-sm">Clique em "Novo Modelo" para começar.</p>
+                                <p className="text-sm">Clique em &quot;Novo Modelo&quot; para começar.</p>
                             </div>
                         </CardContent>
                     </Card>

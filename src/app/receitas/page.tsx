@@ -5,7 +5,7 @@ import * as React from 'react';
 import { PlusCircle, MoreHorizontal, Download, Copy, Loader2, Search } from "lucide-react";
 import { collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, query, writeBatch, where, orderBy, getDocs, Timestamp } from 'firebase/firestore';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { autoTable } from 'jspdf-autotable';
 import { format } from 'date-fns';
 
 import PageHeader from "@/components/page-header";
@@ -422,7 +422,7 @@ export default function ReceitasPage() {
         tableRows.push(recipeData);
     });
 
-    (doc as any).autoTable({
+    autoTable(doc, {
         head: [tableColumn],
         body: tableRows,
         startY: 35,

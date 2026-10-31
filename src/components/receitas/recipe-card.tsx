@@ -41,7 +41,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Checkbox } from "../ui/checkbox";
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { autoTable } from 'jspdf-autotable';
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 
@@ -98,7 +98,7 @@ export function RecipeCard({ recipe, ingredients, isSelected, onSelectChange, on
     });
 
     const startY = recipe.description ? 50 : 40;
-    (doc as any).autoTable({
+    autoTable(doc, {
         head: [tableColumn],
         body: tableRows,
         startY: startY,
@@ -121,7 +121,7 @@ export function RecipeCard({ recipe, ingredients, isSelected, onSelectChange, on
         summaryData.push(['CMV do Produto', `${(recipe.productCMV ?? 0).toFixed(2)}%`]);
     }
     
-    (doc as any).autoTable({
+    autoTable(doc, {
         body: summaryData,
         startY: finalY,
         theme: 'plain',
@@ -275,7 +275,7 @@ export function RecipeCard({ recipe, ingredients, isSelected, onSelectChange, on
               <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
               <AlertDialogDescription>
                 Essa ação não pode ser desfeita. Isso excluirá permanentemente a ficha técnica
-                 "{recipe.name}" dos nossos servidores.
+                 &quot;{recipe.name}&quot; dos nossos servidores.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
