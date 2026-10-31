@@ -1,0 +1,21 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function profile() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data;
+    }
+    function canRead(storeId) {
+      return request.auth != null && (profile().role == 'Master' || profile().storeId == storeId);
+    }
+    function canWrite(storeId) {
+      return request.auth != null && (profile().role == 'Master' || (profile().role == 'Gerente' && profile().storeId == storeId));
+    }
+    match /{folder}/{storeId}/{fileName} {
+      allow read: if folder in ['invoices', 'expenses', 'manuals'] && canRead(storeId);
+      allow create, update: if folder in ['invoices', 'expenses', 'manuals'] && canWrite(storeId)
+        && request.resource.size < 15 * 1024 * 1024
+        && (request.resource.contentType.matches('(image/(jpeg|png|webp|gif)|application/pdf)') || (folder == 'manuals' && request.resource.size <= 5 * 1024 * 1024 && request.resource.contentType in ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']));
+      allow delete: if folder in ['invoices', 'expenses', 'manuals'] && canWrite(storeId);
+    }
+  }
+}

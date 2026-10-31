@@ -12,8 +12,8 @@ import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { db } from '@/lib/firebase';
 import type { Purchase, Revenue } from '@/lib/types';
-import { useStore } from '../auth/store-provider';
-import { Skeleton } from '../ui/skeleton';
+import { useStore } from '@/components/auth/store-provider';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface DailyData {
     date: string;

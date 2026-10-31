@@ -2,9 +2,9 @@
 
 **Restaurant operations and cost visibility | Next.js · TypeScript · Firebase**
 
-Custo Certo is a web application prototype for restaurant operations, focused on organizing purchasing, expenses, inventory, recipe costs, and CMV (food cost) across one or more locations.
+Custo Certo is a web application for restaurant operations, focused on organizing purchasing, expenses, inventory, recipe costs, and CMV (food cost) across one or more locations.
 
-**Project status:** active development. The modules and AI flows below are present in the source tree; this repository snapshot does not claim that every workflow is complete or production-validated.
+**Operational history:** the project owner reports one year of use in Bruxas Burger stores. Current maintenance focuses on security, reproducible builds, and regression checks. This report of real-world use does not imply that every feature or current revision has been independently verified.
 
 ## What is represented in the code
 
@@ -33,10 +33,10 @@ The development server uses port 9002. Configure Firebase and AI access for your
 
 ## Security and deployment notes
 
-- The repository contains Firestore rules that scope access by user role and store. The rules were updated in this snapshot, but have **not** been deployed to Firebase or validated with the Rules Simulator as part of this GitHub sync.
-- Storage rules are managed separately and are not included in this repository snapshot.
-- The live Firebase preview currently opens at the login screen; authenticated workflows and production readiness have not been independently verified.
+- The repository contains Firestore rules that scope access by user role and store. Firebase API verification on 2026-10-31 confirmed a Firestore rules release updated on 2026-10-30. The Rules API passed 24 unauthenticated-access denial tests and 12 role/store authorization tests.
+- Storage rules are versioned in `storage.rules` and were deployed on 2026-10-31. Sixteen Rules API tests passed for role/store boundaries, denied anonymous access, file types, and size limits.
+- The Firebase backend is connected to this repository, branch `main`. Rollout `rollout-2026-10-30-000` succeeded for commit `e53bc54`; the public login returned HTTP 200. Maintenance changes on this branch are not deployed yet.
 
 ## Resumo em português
 
-Protótipo de gestão para restaurantes com módulos de compras, despesas, estoque, receitas, produção, CMV, relatórios, checklists e fluxos de IA. O projeto está em desenvolvimento; as funções e regras descritas refletem o código versionado e não equivalem a uma validação completa em produção.
+Aplicação de gestão para restaurantes com módulos de compras, despesas, estoque, receitas, produção, CMV, relatórios, checklists e fluxos de IA. O responsável relata um ano de uso nas lojas da rede Bruxas Burger. As verificações desta manutenção cobrem a revisão atual; não substituem esse histórico operacional.

@@ -110,7 +110,7 @@ export function BarcodeScanner({ open, onOpenChange, onBarcodeScanned }: Barcode
                 <DialogHeader>
                     <DialogTitle>Leitor de Código de Barras</DialogTitle>
                     <DialogDescription>
-                        Posicione o código de barras em frente à câmera e clique em "Escanear".
+                        Posicione o código de barras em frente à câmera e clique em &quot;Escanear&quot;.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="my-4 space-y-4">

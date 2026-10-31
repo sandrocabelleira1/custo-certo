@@ -181,7 +181,7 @@ export default function FaturamentoPage() {
                             <TableBody>
                             {filteredRevenues.map((revenue) => (
                                 <TableRow key={revenue.id}>
-                                <TableCell>{format(revenue.date, 'dd/MM/yyyy', { locale: ptBR })}</TableCell>
+                                <TableCell>{format(revenue.date instanceof Timestamp ? revenue.date.toDate() : revenue.date, 'dd/MM/yyyy', { locale: ptBR })}</TableCell>
                                 <TableCell className="font-medium">{revenue.description}</TableCell>
                                 <TableCell className="text-right font-semibold text-primary">
                                     {formatCurrency(revenue.amount)}
@@ -198,7 +198,7 @@ export default function FaturamentoPage() {
                                         <AlertDialogHeader>
                                           <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
                                           <AlertDialogDescription>
-                                            Essa ação não pode ser desfeita. Isso excluirá permanentemente o faturamento de <span className="font-bold">{formatCurrency(revenue.amount)}</span> do dia <span className="font-bold">{format(revenue.date, 'dd/MM/yyyy')}</span>.
+                                            Essa ação não pode ser desfeita. Isso excluirá permanentemente o faturamento de <span className="font-bold">{formatCurrency(revenue.amount)}</span> do dia <span className="font-bold">{format(revenue.date instanceof Timestamp ? revenue.date.toDate() : revenue.date, 'dd/MM/yyyy')}</span>.
                                           </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
